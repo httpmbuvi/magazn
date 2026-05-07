@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stories | Safaricom Shop Sarit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-handwritten { font-family: 'Dancing Script', cursive; }
+        .safaricom-green { color: #45B843; }
+        .bg-safaricom-green { background-color: #45B843; }
+        .scroll-reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .scroll-reveal.visible { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 overflow-x-hidden pt-20">
+
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tighter safaricom-green">Safaricom <span class="text-gray-800 underline decoration-green-500">Sarit</span></div>
+            <div class="hidden lg:flex space-x-2 font-medium text-[10px] uppercase tracking-widest">
+                <a href="index.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Home</a>
+                <a href="team.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">The Team</a>
+                <a href="stories.html" class="px-4 py-2 rounded-full bg-safaricom-green text-white transition shadow-sm">Stories</a>
+                <a href="offerings.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Offerings</a>
+                <a href="culture.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Culture</a>
+                <a href="gallery.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Gallery</a>
+                <a href="contact.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="bg-zinc-50 py-32">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="mb-16">
+                <h2 class="text-6xl font-serif italic mb-4">Inside Safaricom Sarit</h2>
+                <p class="text-gray-500 text-lg">Every day is a story worth telling. This is where our journey comes alive.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="group scroll-reveal">
+                    <div class="overflow-hidden rounded-3xl mb-6 shadow-lg">
+                        <img data-img-id="story-1" src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800" class="w-full h-80 object-cover transition duration-700 group-hover:scale-105">
+                    </div>
+                    <h3 data-txt-id="story-1" class="text-2xl font-bold mb-4">A Day in the Life at Sarit</h3>
+                    <p class="text-gray-600 leading-relaxed">From opening doors to closing smiles, every day is filled with energy and commitment to excellence.</p>
+                </div>
+                <div class="group scroll-reveal">
+                    <div class="overflow-hidden rounded-3xl mb-6 shadow-lg">
+                        <img data-img-id="story-2" src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800" class="w-full h-80 object-cover transition duration-700 group-hover:scale-105">
+                    </div>
+                    <h3 data-txt-id="story-2" class="text-2xl font-bold mb-4">Delivering Customer Excellence</h3>
+                    <p class="text-gray-600 leading-relaxed">Our team goes beyond expectations to ensure every customer leaves satisfied and valued.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="voices" class="bg-white py-24">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-5xl font-serif mb-16">Voices of Sarit</h2>
+            <div class="relative bg-gray-50 rounded-3xl p-12 md:p-20 shadow-inner overflow-hidden">
+                <div class="absolute top-10 left-10 text-9xl font-serif text-gray-200 opacity-50 italic">“</div>
+                <div id="testimonial-container" class="relative z-10">
+                    <div class="testimonial-slide animate__animated animate__fadeIn">
+                        <p class="text-2xl md:text-3xl font-serif italic mb-8 text-gray-800">“Every time I visit, I feel welcomed and valued. The service here is unmatched.”</p>
+                        <p class="font-bold tracking-widest uppercase text-safaricom-green text-sm">— Customer Testimonial</p>
+                    </div>
+                </div>
+                <div class="flex justify-center mt-12 gap-4">
+                    <button onclick="nextTestimonial()" class="w-12 h-12 border border-gray-200 rounded-full hover:bg-white transition flex items-center justify-center">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-100 py-12 border-t border-gray-200 text-center">
+        <p class="font-serif italic text-xl mb-4 text-gray-500">This is more than a shop… it’s a family.</p>
+        <p class="text-[10px] text-gray-400 uppercase tracking-[0.4em] font-bold">&copy; 2026 Safaricom Shop Sarit.</p>
+        <a href="admin.html" class="mt-6 inline-block text-[10px] text-gray-400 hover:text-green-600 transition uppercase tracking-widest font-bold border-b border-gray-200">Admin Panel</a>
+    </footer>
+
+    <script>
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    if (entry.target.classList.contains('scroll-reveal')) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                    }
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+
+        const testimonials = [
+            { text: "Every time I visit, I feel welcomed and valued. The service here is unmatched.", author: "Customer Reflection" },
+            { text: "Being part of this team has taught me the true meaning of customer care.", author: "Staff Reflection" },
+            { text: "It’s not just work—it’s a family that grows together every day.", author: "Another Voice" }
+        ];
+        let currentIndex = 0;
+        function nextTestimonial() {
+            const container = document.getElementById('testimonial-container');
+            currentIndex = (currentIndex + 1) % testimonials.length;
+            container.classList.remove('animate__fadeIn');
+            void container.offsetWidth;
+            container.classList.add('animate__fadeIn');
+            container.innerHTML = `
+                <div class="testimonial-slide">
+                    <p class="text-2xl md:text-3xl font-serif italic mb-8 text-gray-800">“${testimonials[currentIndex].text}”</p>
+                    <p class="font-bold tracking-widest uppercase text-safaricom-green text-sm">— ${testimonials[currentIndex].author}</p>
+                </div>
+            `;
+        }
+        setInterval(nextTestimonial, 5000);
+
+        async function updateImages() {
+            const dbName = "SafaricomSaritDB";
+            const storeName = "images";
+            const request = indexedDB.open(dbName, 3);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(storeName)) {
+                    const store = db.createObjectStore(storeName);
+                    store.createIndex("section", "section", { unique: false });
+                } else {
+                    const store = e.currentTarget.transaction.objectStore(storeName);
+                    if (!store.indexNames.contains("section")) store.createIndex("section", "section", { unique: false });
+                }
+            };
+            request.onsuccess = (e) => {
+                const db = e.target.result;
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                
+                const applyData = (el, data, type) => {
+                    if (!data) return;
+                    const isObj = typeof data === 'object';
+                    const val = isObj ? (type === 'img' ? data.image : data.text) : data;
+                    if (!val) return;
+                    if (type === 'img') {
+                        if (el.tagName === 'IMG') {
+                            el.src = val;
+                            if (isObj && data.text) el.alt = data.text;
+                        }
+                        else el.style.backgroundImage = `url(${val})`;
+                    } else {
+                        el.innerText = val;
+                    }
+                };
+
+                document.querySelectorAll('[data-img-id]').forEach(el => {
+                    const req = store.get(el.dataset.imgId);
+                    req.onsuccess = () => applyData(el, req.result, 'img');
+                });
+
+                document.querySelectorAll('[data-txt-id]').forEach(el => {
+                    const req = store.get(el.dataset.txtId);
+                    req.onsuccess = () => applyData(el, req.result, 'txt');
+                });
+            };
+        }
+        window.addEventListener('load', updateImages);
+    </script>
+</body>
+</html>

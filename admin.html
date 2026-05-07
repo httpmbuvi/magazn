@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Safaricom Shop Sarit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .safaricom-green { color: #45B843; }
+        .bg-safaricom-green { background-color: #45B843; }
+        .sidebar-link.active { background-color: #f3f4f6; color: #45B843; border-right: 4px solid #45B843; }
+        .glass-modal { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .card-zoom:hover img { transform: scale(1.05); }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 overflow-hidden">
+
+    <!-- Auth Simulation Overlay -->
+    <div id="login-overlay" class="fixed inset-0 z-[100] bg-white flex items-center justify-center p-6">
+        <div class="max-w-md w-full text-center">
+            <div class="mb-8 font-bold text-3xl tracking-tighter safaricom-green">Safaricom <span class="text-gray-800 underline decoration-green-500">Sarit</span> Admin</div>
+            <div class="bg-white p-8 rounded-[2rem] shadow-2xl border border-gray-100">
+                <h2 class="text-xl font-bold mb-6">Administrator Access</h2>
+                <input type="password" id="admin-pass" placeholder="Enter Admin Key..." class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl mb-4 focus:ring-2 focus:ring-green-500 outline-none transition text-center">
+                <button onclick="checkAuth()" class="w-full bg-safaricom-green text-white py-4 rounded-2xl font-bold hover:bg-green-600 transition shadow-lg shadow-green-100">Verify Identity</button>
+                <p class="mt-4 text-xs text-gray-400">Simulation: Any key works to enter</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-white border-r border-gray-100 flex flex-col">
+            <div class="p-8">
+                <div class="text-xl font-bold tracking-tighter safaricom-green mb-10">Safaricom <span class="text-gray-800">Sarit</span></div>
+                <nav class="space-y-2">
+                    <a href="#" class="sidebar-link active flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16m-7 6h7" stroke-width="2" stroke-linecap="round"/></svg>
+                        Dashboard
+                    </a>
+                    <a href="index.html" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-500 hover:bg-gray-50 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-width="2" stroke-linecap="round"/></svg>
+                        Visit Website
+                    </a>
+                    <a href="#" onclick="logout()" class="sidebar-link flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-red-400 hover:bg-red-50 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-width="2" stroke-linecap="round"/></svg>
+                        Lock Panel
+                    </a>
+                </nav>
+            </div>
+            <div class="mt-auto p-8 border-t border-gray-50">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-safaricom-green font-bold">A</div>
+                    <div>
+                        <p class="text-sm font-bold">Sarit Admin</p>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Superuser</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-100 px-8 py-6 flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-serif italic">Image Management</h2>
+                    <p class="text-xs text-gray-400 uppercase tracking-widest mt-1">Safaricom Sarit Magazine Control Center</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" oninput="filterImages()" placeholder="Search site assets..." class="pl-10 pr-4 py-2 bg-gray-50 border border-gray-100 rounded-full text-sm focus:ring-2 focus:ring-green-500 outline-none transition w-64">
+                        <svg class="w-4 h-4 absolute left-4 top-2.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round"/></svg>
+                    </div>
+                    <button onclick="openModal()" class="bg-safaricom-green text-white px-6 py-2 rounded-full font-bold hover:bg-green-600 transition shadow-lg shadow-green-100 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round"/></svg>
+                        Upload
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filter Bar -->
+            <div class="bg-white border-b border-gray-50 px-8 py-3 flex gap-2">
+                <button onclick="setFilter('all')" class="filter-btn text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full bg-gray-100 text-gray-500 active:bg-safaricom-green active:text-white transition" id="filter-all">All</button>
+                <button onclick="setFilter('homepage')" class="filter-btn text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full text-gray-500 hover:bg-gray-50 transition" id="filter-homepage">Homepage</button>
+                <button onclick="setFilter('team')" class="filter-btn text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full text-gray-500 hover:bg-gray-50 transition" id="filter-team">Team</button>
+                <button onclick="setFilter('stories')" class="filter-btn text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full text-gray-500 hover:bg-gray-50 transition" id="filter-stories">Stories</button>
+                <button onclick="setFilter('manager')" class="filter-btn text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full text-gray-500 hover:bg-gray-50 transition" id="filter-manager">Manager</button>
+                <button onclick="setFilter('team-leaders')" class="filter-btn text-[10px] uppercase font-bold tracking-widest px-4 py-1.5 rounded-full text-gray-500 hover:bg-gray-50 transition" id="filter-team-leaders">Team Leaders</button>
+            </div>
+
+            <!-- Scrollable Content -->
+            <div class="flex-1 overflow-y-auto p-8">
+                <div id="galleryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <!-- Cards will be injected here -->
+                    <div class="col-span-full py-20 text-center opacity-30">
+                        <p class="font-serif italic text-4xl">Scanning IndexedDB...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit/Upload Modal -->
+    <div id="modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-6 bg-black/40">
+        <div class="max-w-xl w-full glass-modal rounded-[2.5rem] shadow-2xl overflow-hidden animate__animated animate__zoomIn animate__faster">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <h3 id="modalTitle" class="text-2xl font-serif">Asset Management</h3>
+                    <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Drag & Drop / File Input -->
+                    <div id="drop-zone" class="relative group">
+                        <input type="file" id="imageInput" accept="image/jpeg, image/png, image/webp" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                        <div id="preview-area" class="border-2 border-dashed border-green-200 rounded-[2rem] p-10 bg-green-50/20 text-center transition group-hover:bg-green-50">
+                            <img id="imagePreview" src="#" alt="Preview" class="hidden mx-auto h-32 w-32 object-cover rounded-xl mb-4 shadow-lg">
+                            <p class="text-sm font-bold text-green-700">Drag & Drop Image</p>
+                            <p class="text-[10px] text-gray-400 mt-1">WEBP, JPG or PNG (MAX. 10MB)</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-2 block">Internal Asset ID (Matches website elements)</label>
+                            <input type="text" id="assetId" placeholder="e.g. manager-photo, leader-1-photo" class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-green-500 outline-none transition">
+                            <div class="mt-2 p-3 bg-blue-50 rounded-xl border border-blue-100">
+                                <p class="text-[9px] text-blue-600 font-bold uppercase tracking-widest mb-1">Leadership ID Reference:</p>
+                                <p class="text-[9px] text-blue-500">Manager: <span class="font-mono font-bold">manager-photo</span> | Sarah: <span class="font-mono font-bold">leader-1-photo</span> | Kevin: <span class="font-mono font-bold">leader-2-photo</span> | Amara: <span class="font-mono font-bold">leader-3-photo</span></p>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-2 block">Name</label>
+                            <input type="text" id="itemName" class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-green-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-2 block">Site Section</label>
+                            <select id="itemSection" class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-green-500 outline-none transition">
+                                <option value="homepage">Homepage</option>
+                                <option value="team">Team Page</option>
+                                <option value="stories">Stories Page</option>
+                                <option value="offerings">Products/Offerings</option>
+                                <option value="gallery">Gallery</option>
+                                <option value="manager">Manager</option>
+                                <option value="team-leaders">Team Leaders</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] uppercase font-bold tracking-widest text-gray-400 mb-2 block">Description / Metadata</label>
+                        <textarea id="itemDesc" rows="3" class="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-green-500 outline-none transition resize-none"></textarea>
+                    </div>
+
+                    <!-- Progress Bar Area -->
+                    <div id="progressContainer" class="hidden w-full bg-gray-100 rounded-full h-1.5 mb-4 overflow-hidden">
+                        <div id="progressBar" class="bg-green-500 h-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+
+                    <div id="error-msg" class="hidden text-xs text-red-500 font-bold p-3 bg-red-50 rounded-xl animate__animated animate__shakeX"></div>
+
+                    <div class="flex gap-4">
+                        <button onclick="handleSave()" id="saveBtn" class="flex-1 bg-safaricom-green text-white py-4 rounded-2xl font-bold hover:bg-green-600 transition shadow-lg shadow-green-100">Apply Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- AUTH SIMULATION ---
+        function checkAuth() {
+            document.getElementById('login-overlay').classList.add('animate__animated', 'animate__fadeOut');
+            setTimeout(() => document.getElementById('login-overlay').style.display = 'none', 500);
+        }
+        function logout() { location.reload(); }
+
+        // --- DATABASE & STORAGE ---
+        const dbName = "SafaricomSaritDB";
+        const storeName = "images";
+        let currentItems = [];
+        let currentFilter = 'all';
+        let editingId = null;
+
+        function getDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 3);
+                request.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        const store = db.createObjectStore(storeName);
+                        store.createIndex("section", "section", { unique: false });
+                    } else {
+                        const store = e.currentTarget.transaction.objectStore(storeName);
+                        if (!store.indexNames.contains("section")) store.createIndex("section", "section", { unique: false });
+                    }
+                };
+                request.onsuccess = (e) => resolve(e.target.result);
+                request.onerror = (e) => reject(e.target.error);
+            });
+        }
+
+        // --- IMAGE PROCESSING (Compression Simulation) ---
+        async function compressImage(base64) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.src = base64;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const MAX_WIDTH = 1200;
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    resolve(canvas.toDataURL('image/jpeg', 0.8));
+                };
+            });
+        }
+
+        // --- UI LOGIC ---
+        const imageInput = document.getElementById('imageInput');
+        const previewImg = document.getElementById('imagePreview');
+        
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    previewImg.classList.remove('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function openModal(id = null) {
+            editingId = id;
+            document.getElementById('modalTitle').innerText = id ? 'Edit Asset' : 'New Asset Upload';
+            document.getElementById('saveBtn').innerText = id ? 'Update Content' : 'Upload Asset';
+            
+            if (id) {
+                const item = currentItems.find(i => i.id === id);
+                document.getElementById('assetId').value = item.id || '';
+                document.getElementById('itemName').value = item.text || '';
+                document.getElementById('itemSection').value = item.section || 'homepage';
+                document.getElementById('itemDesc').value = item.description || '';
+                previewImg.src = item.image || '';
+                previewImg.classList.remove('hidden');
+            } else {
+                document.getElementById('assetId').value = '';
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemDesc').value = '';
+                previewImg.classList.add('hidden');
+            }
+            
+            document.getElementById('modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.add('hidden');
+            document.getElementById('error-msg').classList.add('hidden');
+        }
+
+        async function handleSave() {
+            const name = document.getElementById('itemName').value;
+            const assetId = document.getElementById('assetId').value;
+            const section = document.getElementById('itemSection').value;
+            const desc = document.getElementById('itemDesc').value;
+            const file = imageInput.files[0];
+
+            if (!editingId && !assetId) {
+                showError('Please provide an Internal Asset ID.');
+                return;
+            }
+
+            if (!editingId && !file) {
+                showError('Please select an image to upload.');
+                return;
+            }
+
+            if (file && file.size > 10 * 1024 * 1024) {
+                showError('👉 “Image too large for local memory. Please use a smaller file.”');
+                return;
+            }
+
+            const progressBar = document.getElementById('progressBar');
+            const progressContainer = document.getElementById('progressContainer');
+            progressContainer.classList.remove('hidden');
+            progressBar.style.width = '20%';
+
+            let imgData = null;
+            if (file) {
+                const reader = new FileReader();
+                imgData = await new Promise(resolve => {
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+                progressBar.style.width = '60%';
+                imgData = await compressImage(imgData);
+            }
+
+            const db = await getDB();
+            const tx = db.transaction(storeName, "readwrite");
+            const store = tx.objectStore(storeName);
+
+            const id = editingId || assetId; 
+            const existingRequest = store.get(id);
+            
+            existingRequest.onsuccess = () => {
+                const res = existingRequest.result;
+                const existing = typeof res === 'object' ? (res || {}) : { image: res };
+                
+                const newData = {
+                    image: imgData || existing.image || '',
+                    text: name || existing.text || 'Untitled Asset',
+                    section: section,
+                    description: desc,
+                    updatedAt: new Date().toISOString()
+                };
+                store.put(newData, id);
+            };
+
+            tx.oncomplete = () => {
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressContainer.classList.add('hidden');
+                    closeModal();
+                    loadGallery();
+                }, 500);
+            };
+        }
+
+        async function loadGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const db = await getDB();
+            const tx = db.transaction(storeName, "readonly");
+            const store = tx.objectStore(storeName);
+            const request = store.openCursor();
+            
+            currentItems = [];
+            grid.innerHTML = '';
+
+            request.onsuccess = (e) => {
+                const cursor = e.target.result;
+                if (cursor) {
+                    const val = cursor.value;
+                    const item = typeof val === 'object' ? val : { image: val, text: 'Legacy Asset', section: 'general' };
+                    currentItems.push({ id: cursor.key, ...item });
+                    cursor.continue();
+                } else {
+                    renderGrid();
+                }
+            };
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('galleryGrid');
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filtered = currentItems.filter(item => {
+                const matchesSearch = item.text.toLowerCase().includes(searchQuery);
+                const matchesFilter = currentFilter === 'all' || item.section === currentFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-span-full py-20 text-center text-gray-400 font-serif italic">No magazine assets found.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all card-zoom group border border-gray-50 animate__animated animate__fadeIn">
+                    <div class="relative h-48 overflow-hidden bg-gray-100">
+                        <img src="${item.image}" class="w-full h-full object-cover transition duration-700" loading="lazy">
+                        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest text-safaricom-green">
+                            ${item.section || 'General'}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h4 class="font-bold text-gray-800 mb-1 truncate">${item.text}</h4>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-4">ID: ${item.id}</p>
+                        <div class="flex gap-2">
+                            <button onclick="openModal('${item.id}')" class="flex-1 bg-gray-50 text-gray-600 py-2 rounded-xl text-xs font-bold hover:bg-green-50 hover:text-green-600 transition uppercase tracking-widest">Edit</button>
+                            <button onclick="deleteAsset('${item.id}')" class="bg-gray-50 text-gray-400 p-2 rounded-xl hover:bg-red-50 hover:text-red-500 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function deleteAsset(id) {
+            if (confirm("Are you sure you want to delete this image? This cannot be undone.")) {
+                const db = await getDB();
+                const tx = db.transaction(storeName, "readwrite");
+                tx.objectStore(storeName).delete(id);
+                tx.oncomplete = () => loadGallery();
+            }
+        }
+
+        function setFilter(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-safaricom-green', 'text-white');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`filter-${filter}`).classList.add('bg-safaricom-green', 'text-white');
+            renderGrid();
+        }
+
+        function filterImages() { renderGrid(); }
+        function showError(msg) {
+            const err = document.getElementById('error-msg');
+            err.innerText = msg;
+            err.classList.remove('hidden');
+        }
+
+        window.onload = loadGallery;
+    </script>
+</body>
+</html>

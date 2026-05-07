@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Safaricom Shop Sarit</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .safaricom-green { color: #45B843; }
+        .bg-safaricom-green { background-color: #45B843; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 pt-20">
+
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold tracking-tighter safaricom-green">Safaricom <span class="text-gray-800 underline decoration-green-500">Sarit</span></div>
+            <div class="hidden lg:flex space-x-2 font-medium text-[10px] uppercase tracking-widest">
+                <a href="index.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Home</a>
+                <a href="team.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">The Team</a>
+                <a href="stories.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Stories</a>
+                <a href="offerings.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Offerings</a>
+                <a href="culture.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Culture</a>
+                <a href="gallery.html" class="px-4 py-2 rounded-full bg-safaricom-green text-white transition shadow-sm">Gallery</a>
+                <a href="contact.html" class="px-4 py-2 rounded-full hover:bg-gray-100 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="py-32">
+        <div class="max-w-7xl mx-auto px-6 text-center mb-16">
+            <h2 class="text-5xl font-serif mb-4">Moments at Sarit</h2>
+            <p class="text-gray-500 italic">Every picture tells a story of dedication and teamwork.</p>
+        </div>
+        <div id="dynamicGalleryGrid" class="grid grid-cols-2 md:grid-cols-4 gap-6 px-6">
+            <!-- Gallery images will be dynamically loaded here -->
+        </div>
+
+    <footer class="bg-gray-100 py-12 border-t border-gray-200 text-center">
+        <p class="text-[10px] text-gray-400 uppercase tracking-[0.4em] font-bold">&copy; 2026 Safaricom Shop Sarit.</p>
+        <a href="admin.html" class="mt-6 inline-block text-[10px] text-gray-400 hover:text-green-600 transition uppercase tracking-widest font-bold border-b border-gray-200">Admin Panel</a>
+    </footer>
+    <script>
+        async function updateImages() {
+            const dbName = "SafaricomSaritDB";
+            const storeName = "images";
+            const request = indexedDB.open(dbName, 3);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(storeName)) {
+                    const store = db.createObjectStore(storeName);
+                    store.createIndex("section", "section", { unique: false });
+                } else {
+                    const store = e.currentTarget.transaction.objectStore(storeName);
+                    if (!store.indexNames.contains("section")) store.createIndex("section", "section", { unique: false });
+                }
+            };
+            request.onsuccess = (e) => {
+                const db = e.target.result;
+                const tx = db.transaction(storeName, "readonly");
+                const store = tx.objectStore(storeName);
+                
+                // Update Images
+                const applyData = (el, data, type) => {
+                    if (!data) return;
+                    const isObj = typeof data === 'object';
+                    const val = isObj ? (type === 'img' ? data.image : data.text) : data;
+                    if (!val) return;
+                    if (type === 'img') {
+                        if (el.tagName === 'IMG') {
+                            el.src = val;
+                            if (isObj && data.text) el.alt = data.text;
+                        }
+                        else el.style.backgroundImage = `url(${val})`;
+                    } else {
+                        el.innerText = val;
+                    }
+                };
+
+                document.querySelectorAll('[data-img-id]').forEach(el => {
+                    const req = store.get(el.dataset.imgId);
+                    req.onsuccess = () => applyData(el, req.result, 'img');
+                });
+
+                document.querySelectorAll('[data-txt-id]').forEach(el => {
+                    const req = store.get(el.dataset.txtId);
+                    req.onsuccess = () => applyData(el, req.result, 'txt');
+                });
+
+                // NEW LOGIC: Dynamically load gallery images
+                const galleryGridContainer = document.getElementById('dynamicGalleryGrid');
+                if (galleryGridContainer) {
+                    galleryGridContainer.innerHTML = ''; // Clear existing content
+
+                    const allItemsRequest = store.getAll();
+                    allItemsRequest.onsuccess = () => {
+                        const allItems = allItemsRequest.result;
+                        const galleryItems = allItems.filter(item => item.section === 'gallery');
+
+                        galleryItems.forEach(item => {
+                            const imgDiv = document.createElement('div');
+                            imgDiv.className = 'group relative overflow-hidden rounded-2xl shadow-lg';
+
+                            const imgElement = document.createElement('img');
+                            imgElement.setAttribute('data-img-id', item.id); // Add data-img-id for consistency
+                            imgElement.src = item.image || 'https://via.placeholder.com/400x600?text=No+Image'; // Placeholder if image is missing
+                            imgElement.alt = item.text || 'Gallery Image';
+                            imgElement.className = 'w-full h-64 object-cover transition duration-500 group-hover:scale-110';
+                            imgElement.loading = 'lazy';
+
+                            imgDiv.appendChild(imgElement);
+                            galleryGridContainer.appendChild(imgDiv);
+                        });
+                    };
+                }
+            };
+        }
+        window.addEventListener('load', updateImages);
+    </script>
+</body>
+</html>
